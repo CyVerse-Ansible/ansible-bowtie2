@@ -1,0 +1,7 @@
+---
+
+- name: Playbook to install bowtie2 tool
+  hosts: localhost
+  remote_user: root
+  roles:
+    - bowtie2-ansible
