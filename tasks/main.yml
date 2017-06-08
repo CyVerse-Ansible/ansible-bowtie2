@@ -1,11 +1,5 @@
 ---
 
-- name: Gather OS-specific vars
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version}}.yml"
-    - "{{ ansible_distribution }}.yml"
-
 - name: Download zip
   get_url:
     url: "https://downloads.sourceforge.net/project/bowtie-bio/bowtie2/{{ VERSION }}/bowtie2-{{ VERSION }}-source.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fbowtie-bio%2Ffiles%2Fbowtie2%2F{{ VERSION }}%2F&ts=1496946996&use_mirror=phoenixnap"
