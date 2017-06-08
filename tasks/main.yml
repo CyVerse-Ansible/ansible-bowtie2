@@ -1,0 +1,49 @@
+---
+
+- name: Gather OS-specific vars
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version}}.yml"
+    - "{{ ansible_distribution }}.yml"
+
+- name: Download zip
+  get_url:
+    url: "https://downloads.sourceforge.net/project/bowtie-bio/bowtie2/{{ VERSION }}/bowtie2-{{ VERSION }}-source.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fbowtie-bio%2Ffiles%2Fbowtie2%2F{{ VERSION }}%2F&ts=1496946996&use_mirror=phoenixnap"
+    dest: "/tmp/bowtie2.zip"
+
+- name: Unzip the package
+  unarchive:
+    src: "/tmp/bowtie2.zip"
+    dest: "/tmp"
+    remote_src: yes
+
+- name: Build executables from source
+  make:
+    chdir: "/tmp/bowtie2-{{ VERSION }}"
+    params:
+      NO_TBB: 1
+
+- name: Move executable files to path
+  copy:
+    remote_src: yes
+    src: "/tmp/bowtie2-{{ VERSION }}/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - "bowtie2"
+    - "bowtie2-align-s"
+    - "bowtie2-align-l"
+    - "bowtie2-build"
+    - "bowtie2-build-s"
+    - "bowtie2-build-l"
+    - "bowtie2-inspect"
+    - "bowtie2-inspect-s"
+    - "bowtie2-inspect-l"
+
+- name: Remove temporary files
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - "/tmp/bowtie2.zip"
+    - "/tmp/bowtie2-{{ VERSION }}"
