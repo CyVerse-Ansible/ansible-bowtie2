@@ -28,13 +28,4 @@ script:
   # Create a random file to store the container ID.
   - container_id=$(mktemp)
 
-  # Check the role/playbook's syntax.
-  - >
-    docker exec --tty "$(cat ${container_id})" env TERM=xterm
-    ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/test.yml
-    --syntax-check
-
-    # Run the role/playbook with ansible-playbook.
-  - >
-    docker exec --tty "$(cat ${container_id})" env TERM=xterm
-    ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/test.yml
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
