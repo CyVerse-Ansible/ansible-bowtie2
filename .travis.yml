@@ -29,3 +29,14 @@ script:
   - container_id=$(mktemp)
 
   - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/bowtie2-ansible:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+
+  # Check the role/playbook's syntax.
+  - >
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/test.yml
+    --syntax-check
+
+  # Run the role/playbook with ansible-playbook.
+  - >
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/test.yml
