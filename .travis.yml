@@ -7,23 +7,34 @@ dist: trusty
 services:
   - docker
 
-env:
-  - distribution: centos
-    version: 7
-  - distribution: centos
-    version: 6
-  - distribution: ubuntu
-    version: 16.04
-  - distribution: ubuntu
-    version: 14.04
+  env:
+    - distro: centos7
+      init: /usr/lib/systemd/systemd
+      run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    - distro: centos6
+      init: /sbin/init
+      run_opts: ""
+    - distro: ubuntu1604
+      init: /lib/systemd/systemd
+      run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    - distro: ubuntu1404
+      init: /sbin/init
+      run_opts: ""
 
 before_install:
-  - 'sudo docker run -it --name=test_dummy --privileged --detach --volume="${PWD}":/etc/ansible/roles/bowtie2-ansible:rw cyverse/ansible-test:latest-${distribution}-${version} bash'
+  - 'docker pull geerlingguy/docker-${distro}-ansible:latest'
 
 script:
-  # Install unzip first
-  - sudo docker exec test_dummy ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/pre-test.yml -i tests/inventory
-  # Syntax check
-  - sudo docker exec test_dummy ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/test.yml -i tests/inventory --syntax-check
-  # Run
-  - sudo docker exec test_dummy ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/test.yml -i tests/inventory
+  # Create a random file to store the container ID.
+  - container_id=$(mktemp)
+
+  # Check the role/playbook's syntax.
+  - >
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/test.yml
+    --syntax-check
+
+    # Run the role/playbook with ansible-playbook.
+  - >
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    ansible-playbook /etc/ansible/roles/bowtie2-ansible/tests/test.yml
