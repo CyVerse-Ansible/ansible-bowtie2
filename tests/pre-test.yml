@@ -5,3 +5,4 @@
   remote_user: root
   tasks:
     - package: name="unzip" state=present
+    - package: name="make" state=present
