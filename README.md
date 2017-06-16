@@ -1,8 +1,8 @@
-# bowtie2-ansible
+# ansible-bowtie2
 
 Installs [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
 
-[![Build Status](https://travis-ci.org/CyVerse-Ansible/bowtie2-ansible.svg?branch=master)](https://travis-ci.org/CyVerse-Ansible/bowtie2-ansible)
+[![Build Status](https://travis-ci.org/CyVerse-Ansible/ansible-bowtie2.svg?branch=master)](https://travis-ci.org/CyVerse-Ansible/ansible-bowtie2)
 
 ### Role Variables
 
