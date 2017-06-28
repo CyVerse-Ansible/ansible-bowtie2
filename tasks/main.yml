@@ -8,15 +8,16 @@
     - "g++"
     - "zip"
     - "build-essential"
+    - "libglib2.0-dev"
 
 - name: Download zip
   get_url:
     url: "https://github.com/BenLangmead/bowtie2/archive/v{{ VERSION }}.tar.gz"
-    dest: "/tmp/bowtie2.zip"
+    dest: "/tmp/bowtie2.tar.gz"
 
 - name: Unzip the package
   unarchive:
-    src: "/tmp/bowtie2.zip"
+    src: "/tmp/bowtie2.tar.gz"
     dest: "/tmp"
     remote_src: yes
 
@@ -48,5 +49,5 @@
     state: absent
     path: "{{ item }}"
   with_items:
-    - "/tmp/bowtie2.zip"
+    - "/tmp/bowtie2.tar.gz"
     - "/tmp/bowtie2-{{ VERSION }}"
