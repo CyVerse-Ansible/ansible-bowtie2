@@ -17,7 +17,7 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - "g++"
+    - "avr-gcc-c++.x86_64"
     - "zip"
     - "glib2"
   when: ansible_distribution == "CentOS"
