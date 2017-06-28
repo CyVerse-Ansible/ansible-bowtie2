@@ -1,6 +1,6 @@
 ---
 
-- name: Install dependencies
+- name: Install dependencies Ubuntu
   package:
     name: "{{ item }}"
     state: present
@@ -9,6 +9,18 @@
     - "zip"
     - "build-essential"
     - "libglib2.0-dev"
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: Install dependencies CentOS
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "g++"
+    - "zip"
+    - "glib2"
+  when: ansible_distribution == "CentOS"
 
 - name: Download zip
   get_url:
